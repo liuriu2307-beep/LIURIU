@@ -17,11 +17,13 @@ jobs:
       - name: Gom web thành PWA
         run: npm run build
       - name: Đồng bộ iOS Capacitor
-        run: npx cap sync ios
+        run: |
+          npm install -g @capacitor/cli
+          npx cap sync ios
       - name: Biên dịch Xcode
         run: |
           xcodebuild archive \
-            -workspace ios/App/App.xcworkspace \
+            -project ios/App/App.xcodeproj \
             -scheme App \
             -configuration Release \
             -archivePath build/App.xcarchive \
