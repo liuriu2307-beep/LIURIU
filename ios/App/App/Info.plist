@@ -47,5 +47,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>LIURIU cần sử dụng Camera để bạn chụp lại các hóa đơn và đồ vật chi tiêu.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>LIURIU cần quyền để lưu ảnh chi tiêu vào máy của bạn.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LIURIU cần quyền truy cập Thư viện ảnh để hiển thị lại các biên lai.</string>
 </dict>
 </plist>
