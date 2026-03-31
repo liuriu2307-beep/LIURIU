@@ -99,6 +99,9 @@ function getRelativeTime(dateIso) {
 // Modals
 function fixIOSScroll() {
   setTimeout(() => {
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+      return; // Khách đang chuyển sang ô khác, không cuộn
+    }
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
   }, 100);
