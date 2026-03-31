@@ -1,0 +1,560 @@
+:root {
+  --bg-color: #1a1b32;
+  --card-bg: #2d3359;
+  --text-primary: #ffffff;
+  --text-secondary: #9ba3c0;
+  --accent-blue: #323dff;
+  --accent-orange: #ff9800;
+  --danger-color: #f73636;
+  --safe-top: max(env(safe-area-inset-top), 48px);
+  --safe-bottom: max(env(safe-area-inset-bottom), 32px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.hidden:not(.modal):not(.fab-btn) {
+  display: none !important;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  width: 100vw;
+  height: 100dvh; /* Sửa lỗi tràn màn hình Safari */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  -webkit-touch-callout: none; /* Chặn menu ngữ cảnh lưu ảnh/link của iOS */
+  -webkit-user-select: none; /* Chặn bôi đen text Safari */
+  user-select: none; /* Chặn bôi đen text chung */
+}
+
+input, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  height: 100dvh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= MAIN PAGE ================= */
+.page-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: calc(var(--safe-top) + 24px) 24px 20px;
+}
+
+.header-left h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.month-selector-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.totals-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.total-text {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.income-text {
+  color: var(--accent-blue);
+}
+
+.expense-text {
+  color: var(--danger-color);
+}
+
+.cancel-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+/* FEED */
+.feed-section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px calc(var(--safe-bottom) + 160px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  -webkit-overflow-scrolling: touch; /* Hỗ trợ scroll mượt trên iOS */
+}
+
+.feed-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  width: 80%;
+}
+.empty-icon-wrapper {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* CARDS */
+.expense-card {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  min-height: 100px; /* Ngăn bị ép nhỏ */
+  flex-shrink: 0; /* Giữ nguyên kích thước */
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.expense-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--danger-color);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Trash ở bên phải */
+  padding-right: 28px;
+  z-index: 1;
+  cursor: pointer; /* Cho phép click vào thùng rác */
+}
+
+/* SELECTION MODE STYLES */
+.selection-check {
+  width: 0;
+  height: 24px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  margin-right: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.selection-mode .selection-check {
+  width: 24px;
+  margin-right: 16px;
+  opacity: 1;
+}
+
+.expense-card.selected .selection-check {
+  background: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.expense-card.selected .selection-check::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.expense-card-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg);
+  border-radius: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.expense-img {
+  width: 68px;
+  height: 68px;
+  min-width: 68px; /* Ngăn bị móp méo */
+  flex-shrink: 0;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.expense-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.expense-price {
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+}
+
+.expense-time {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.expense-note {
+  font-size: 13px;
+  color: #a0a4c0;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-income .expense-price {
+  color: var(--accent-blue);
+}
+
+.card-expense .expense-price {
+  color: var(--danger-color);
+}
+
+/* ================= FAB BUTTONS ================= */
+.fab-container {
+  position: absolute;
+  bottom: calc(var(--safe-bottom) + 32px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 24px;
+  z-index: 10;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+}
+
+.fab-container.hidden {
+  transform: translate(-50%, 150px);
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.fab-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.3s, filter 0.3s;
+}
+
+.fab-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
+}
+
+.fab-income {
+  background: var(--accent-blue);
+  box-shadow: 0 8px 16px rgba(50, 61, 255, 0.4);
+}
+
+.fab-expense {
+  background: var(--danger-color);
+  box-shadow: 0 8px 16px rgba(247, 54, 54, 0.4);
+}
+
+.fab-delete {
+  position: absolute; /* Thùng rác vẫn đứng 1 mình */
+  bottom: calc(var(--safe-bottom) + 32px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  background: var(--danger-color);
+  box-shadow: 0 8px 16px rgba(247, 54, 54, 0.4);
+}
+
+.fab-delete.hidden {
+  transform: translate(-50%, 150px);
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.fab-delete.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ================= MODALS ================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(var(--safe-top) + 16px) 24px 16px;
+  width: 100%;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* CAMERA MODAL */
+.camera-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 24px;
+}
+
+#camera-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+.camera-dash-border {
+  position: absolute;
+  width: 100%;
+  height: 45%;
+  border: 2px dashed rgba(255,255,255,0.6);
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+.camera-footer {
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+  padding-bottom: calc(var(--safe-bottom) + 32px);
+}
+
+.capture-trigger {
+  width: 76px;
+  height: 76px;
+  border-radius: 38px;
+  background: none;
+  border: 3px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.capture-inner-orange {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background: var(--accent-orange);
+}
+
+/* DETAIL MODAL */
+#modal-detail {
+  background: rgba(26, 27, 50, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  justify-content: flex-end;
+}
+
+.detail-container {
+  background: var(--bg-color);
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  padding: 32px 24px calc(var(--safe-bottom) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preview-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+#preview-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  background: var(--card-bg);
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.action-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+}
+
+.btn-dark {
+  background: #3a4266;
+}
+
+.btn-blue {
+  background: var(--accent-blue);
+}
+
+/* MONTH VIEWER */
+.year-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.year-btn {
+  background: none;
+  border: none;
+  color: var(--accent-orange);
+  font-size: 20px;
+  font-weight: bold;
+}
+#display-year {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-orange);
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.month-item {
+  background: var(--card-bg);
+  border: none;
+  color: white;
+  padding: 24px 0;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.month-item.active {
+  background: var(--accent-blue);
+  border: 1px solid rgba(255,255,255,0.2);
+}

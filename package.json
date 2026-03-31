@@ -1,0 +1,23 @@
+{
+  "name": "app-quan-ly-chi-tieu-ios",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.3.0",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "vite": "^8.0.1"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/camera": "^8.0.2",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0",
+    "@capacitor/preferences": "^8.0.1"
+  }
+}

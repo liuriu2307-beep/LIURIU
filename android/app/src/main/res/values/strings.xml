@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">app_quan_ly_chi_tieu_ios</string>
+    <string name="title_activity_main">app_quan_ly_chi_tieu_ios</string>
+    <string name="package_name">com.expense.tracker</string>
+    <string name="custom_url_scheme">com.expense.tracker</string>
+</resources>
